@@ -329,17 +329,111 @@ module.exports = {
 }
 ```
 
+### 3、注意点
 
+#### 1）如何在主应用的某个路由页面加载微应用
 
+**`react` + `react-router` 技术栈的主应用：只需要让子应用的 `activeRule` 包含主应用的这个路由即可。**
 
+**`vue` + `vue-router` 技术栈的主应用:**
 
+> 例如：主应用需要在login页面登录，登录成功后跳转到main后台管理界面，在main管理界面下可以显示子应用。
 
+修改主应用router.js：
 
+```JavaScript
+// 如果这个路由有其他子路由，需要另外注册一个路由，任然使用这个组件即可。
+// 本案例就是有子路由，所以需要才后面重新定义main页面的路由
+const routes = [
+    {
+        path: '/',
+        name: 'Login',
+        component: Login
+    },
+    {
+        path: '/main',
+        name: 'Main',
+        component: Main,
+        children: [
+            {
+                path: '/home',
+                name: 'Home',
+                component: Home
+            },
+            {
+                path: '/about',
+                name: 'About',
+                // route level code-splitting
+                // this generates a separate chunk (about.[hash].js) for this route
+                // which is lazy-loaded when the route is visited.
+                component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+            }
+        ]
+    },
+    {
+        path: '/main/*',
+        name: 'Main',
+        component: Main,
+    }
+]
+```
 
+修改主应用main.js的文件：
 
+```JavaScript
+// 子应用的 activeRule 需要包含主应用的这个路由 path
+const apps = [
+  {
+    name: 'vueApp', // 应用的名字
+    entry: '//localhost:8081', // 默认会加载这个html 解析里面的js 动态的执行 （子应用必须支持跨域）fetch
+    container: '#vue', // 容器名
+    activeRule: '/main/vue', // 激活的路径
+    props: { a: 1 }
+  },
+  {
+    name: 'reactApp',
+    entry: '//localhost:20000', // 默认会加载这个html 解析里面的js 动态的执行 （子应用必须支持跨域）fetch
+    container: '#react',
+    activeRule: '/main/react',
+  }
+]
+registerMicroApps(apps); // 注册应用
+```
 
+修改主应用main.vue页面代码：
 
+```javascript
+// 在 Main.vue 这个组件的 mounted 周期调用 start 函数，注意不要重复调用。
+<template>
+  <div class="main-content">
+    <el-menu :router="true" mode="horizontal">
+      <!--基座中可以放自己的路由-->
+      <el-menu-item index="/home">Home</el-menu-item>
+      <el-menu-item index="/about">About</el-menu-item>
+      <!--引用其他子应用-->
+      <el-menu-item index="/main/vue">vue应用</el-menu-item>
+      <el-menu-item index="/main/react">react应用</el-menu-item>
+    </el-menu>
+    <router-view></router-view>
+    <div id="vue"></div>
+    <div id="react"></div>
+  </div>
+</template>
 
+<script>
+import { start } from "qiankun";
+
+export default {
+  name: "Main",
+  mounted() {
+    if (!window.qiankunStarted) {
+      window.qiankunStarted = true;
+      start();
+    }
+  },
+};
+</script>
+```
 
 
 

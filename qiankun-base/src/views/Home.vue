@@ -1,5 +1,5 @@
 <template>
-  <div class="home">默认的base</div>
+  <div class="home">qiankun-base：home</div>
 </template>
 
 <script>
