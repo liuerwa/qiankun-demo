@@ -33,7 +33,7 @@ const apps = [
     name: 'vueApp', // 应用的名字
     entry: '//localhost:8081', // 默认会加载这个html 解析里面的js 动态的执行 （子应用必须支持跨域）fetch
     container: '#vue', // 容器名
-    activeRule: '/main/vue', // 激活的路径
+    activeRule: '/main/vue', // 激活的路径 
     props: propsData,
   },
   {
