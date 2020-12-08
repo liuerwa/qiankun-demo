@@ -6,7 +6,6 @@
         <router-link to="/home">
           <img src="../../assets/logo.png" class="logo" />
         </router-link>
-        <el-button @click="changeActions">改变actions值</el-button>
       </el-header>
       <el-container>
         <!-- 左侧导航 -->
@@ -59,11 +58,6 @@ export default {
       window.qiankunStarted = true;
       start();
     }
-  },
-  methods: {
-    changeActions() {
-      this.$actions.setGlobalState({ userName: "小王" });
-    },
   },
 };
 </script>

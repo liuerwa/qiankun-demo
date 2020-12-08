@@ -30,17 +30,18 @@ export async function bootstrap(props) {
 };
 
 export async function mount(props) {
+  // 加了true之后，会自动调取前面这个回调方法，这样可以拿到主应用(基座)修改的值
   props.onGlobalStateChange((state, prev) => {
     // state: 变更后的状态; prev 变更前的状态
     console.log(state, prev);
-  });
+  }, true);
 
   Vue.prototype.$onGlobalStateChange = props.onGlobalStateChange;
   Vue.prototype.$setGlobalState = props.setGlobalState;
 
   console.log(props)
   
-  render(props)
+  render(props);
 }
 
 export async function unmount(props) {
