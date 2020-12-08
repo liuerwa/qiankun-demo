@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
+Vue.use(ElementUI);
 
 // Vue.config.productionTip = false
 
@@ -30,7 +34,9 @@ export async function mount(props) {
     // state: 变更后的状态; prev 变更前的状态
     console.log(state, prev);
   });
-  props.setGlobalState({ a: 4 });
+
+  Vue.prototype.$onGlobalStateChange = props.onGlobalStateChange;
+  Vue.prototype.$setGlobalState = props.setGlobalState;
 
   console.log(props)
   

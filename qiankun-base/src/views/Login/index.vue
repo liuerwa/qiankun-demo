@@ -46,7 +46,11 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log("登录成功!!");
+          this.$message({
+            message: "登录成功",
+            type: "success",
+          });
+          this.$actions.setGlobalState({ token: "abcd" });
           setTimeout(() => {
             this.$router.push("/home");
           }, 1000);
