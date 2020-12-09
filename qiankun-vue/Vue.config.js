@@ -7,6 +7,7 @@ module.exports = {
             'Access-Control-Allow-Origin': '*'
         }
     },
+	 
     configureWebpack: {
         output: {
             //资源打包路径
